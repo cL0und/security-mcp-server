@@ -9,16 +9,19 @@ echo "[*] Building the Docker image: $IMAGE_NAME..."
 docker build -t $IMAGE_NAME .
 
 echo "[*] Build successful!"
-echo "[*] To run the MCP server (mount this repo so /app/web_pentest_mcp_server.py comes from the host):"
-echo "    docker run -i --rm -v \"\$(pwd):/app\" $IMAGE_NAME"
+echo "[*] Run SSE MCP (publish port 4000, mount repo for /app/web_pentest_mcp_server.py):"
+echo "    docker run --rm -p 4000:4000 -v \"\$(pwd):/app\" $IMAGE_NAME"
 echo ""
-echo "[*] Example .mcp.json (replace HOST_PATH with the absolute path to this repo on your machine):"
+echo "[*] Connect clients to SSE (FastMCP default path /sse on MCP_PORT):"
+echo "    http://127.0.0.1:4000/sse"
+echo ""
+echo "[*] Example .mcp.json (SSE over local Docker):"
 echo '
 {
   "mcpServers": {
     "web-pentest-tools": {
-      "command": "docker",
-      "args": ["run", "-i", "--rm", "-v", "HOST_PATH:/app", "web-pentest-mcp-server"]
+      "url": "http://127.0.0.1:4000/sse",
+      "transport": "sse"
     }
   }
 }'

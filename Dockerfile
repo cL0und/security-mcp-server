@@ -4,6 +4,8 @@ FROM golang:1.26-bookworm
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PATH="/root/go/bin:/opt/venv/bin:$PATH"
+ENV MCP_HOST=0.0.0.0
+ENV MCP_PORT=4000
 
 # Install system dependencies, Python, and default wordlists (dirb)
 RUN apt-get update && apt-get install -y \
@@ -37,6 +39,8 @@ RUN pip install --no-cache-dir fastmcp langchain-mcp-adapters deepagents
 # Mount point: bind-mount the project dir from the host at run time, e.g.
 #   docker run -i --rm -v "$PWD:/app" ...
 WORKDIR /app
+
+EXPOSE 4000
 
 # Run MCP server from the mounted tree (no script baked into the image)
 ENTRYPOINT ["/opt/venv/bin/python3", "/app/web_pentest_mcp_server.py"]
